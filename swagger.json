@@ -1,0 +1,61 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Prototipo",
+    "description": "Teste usando API Docs pelo Swagger",
+    "version": "1.0.0",
+    "termsOfService": "http://localhost:3000/terms",
+    "contact": { "email": "email@example.com" }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/v1",
+      "description": "API de testes"
+    },
+    {
+      "url": "http://www.codedrops.com",
+      "description": "API de Producao"
+    }
+  ],
+  "paths": {
+    "/produtos": {
+      "post": {
+        "summary": "Cadastro de Produto",
+        "description": "Rota responsável pelo Cadastro de Produto",
+        "tags": ["Produtos"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas /Produto"
+              },
+              "examples": {
+                "product": {
+                  "value": {
+                    "name": "Notebook Gamer",
+                    "description": "Notebook gamer Intel Core i7",
+                    "price": 4500
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Produto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "price": { "type": "number" }
+        }
+      }
+    }
+  }
+}
