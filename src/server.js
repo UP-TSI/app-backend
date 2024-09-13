@@ -1,71 +1,67 @@
 const express = require("express");
 const app = express();
 
-app.listen('8080', () => {
-  console.log(`Servidor rodando na porta ${'8080'}`);
-});
+// conn
+const Config = require("./config/config.js");
 
-// // conn
-// const Config = require("./config/config.js");
+// Documentation
+const swagger = require("swagger-ui-express");
+const swaggerDocs = require("../swagger.json");
 
-// // Documentation
-// const swagger = require("swagger-ui-express");
-// const swaggerDocs = require("../swagger.json");
+// Importing routes
+const exampleRouter = require("./routes/example_route/exampleRoute.js");
 
-// // Importing routes
-// const exampleRouter = require("./routes/example_route/exampleRoute.js");
+// Env config
+require("dotenv").config();
 
-// // Env config
-// require("dotenv").config();
+//  Middlewares
+// Handling with json
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+app.use(express.json());
 
-// //  Middlewares
-// // Handling with json
-// app.use(
-//   express.urlencoded({
-//     extended: true,
-//   })
-// );
-// app.use(express.json());
+// Routes
+app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocs)); // Documentation Route
+app.use("/", exampleRouter); // Example Route
 
-// // Routes
-// app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocs)); // Documentation Route
-// app.use("/", exampleRouter); // Example Route
+// Função para encerrar o servidor e a conexão com o banco de dados
+async function shutdown() {
+  console.log("Encerrando o servidor...");
 
-// // Função para encerrar o servidor e a conexão com o banco de dados
-// async function shutdown() {
-//   console.log("Encerrando o servidor...");
+  // Encerra a conexão com o banco de dados
+  try {
+    await Config.closeConnection();
+  } catch (error) {
+    console.error("Erro ao encerrar a conexão com o banco de dados:", error);
+  }
 
-//   // Encerra a conexão com o banco de dados
-//   try {
-//     await Config.closeConnection();
-//   } catch (error) {
-//     console.error("Erro ao encerrar a conexão com o banco de dados:", error);
-//   }
+  // Encerra o servidor Express
+  if (server) {
+    server.close(() => {
+      console.log("Servidor encerrado.");
+      process.exit(0);
+    });
+  } else {
+    process.exit(0);
+  }
+}
 
-//   // Encerra o servidor Express
-//   if (server) {
-//     server.close(() => {
-//       console.log("Servidor encerrado.");
-//       process.exit(0);
-//     });
-//   } else {
-//     process.exit(0);
-//   }
-// }
+// Captura sinais de encerramento
+process.on("SIGINT", shutdown); // Captura Ctrl+C
+process.on("SIGTERM", shutdown); // Captura término do processo (geralmente enviado por sistemas de gerenciamento)
 
-// // Captura sinais de encerramento
-// process.on("SIGINT", shutdown); // Captura Ctrl+C
-// process.on("SIGTERM", shutdown); // Captura término do processo (geralmente enviado por sistemas de gerenciamento)
+try {
+  // Inicializa a conexão com o banco
+  Config.startConnection();
 
-// try {
-//   // Inicializa a conexão com o banco
-//   Config.startConnection();
-
-//   // Inicia o servidor Express
-//   app.listen(process.env.PORT, () => {
-//     console.log(`Servidor rodando na porta ${process.env.PORT}`);
-//   });
-// } catch (error) {
-//   console.error("Erro ao iniciar o servidor:", error);
-//   process.exit(1);
-// }
+  // Inicia o servidor Express
+  app.listen(process.env.PORT, () => {
+    console.log(`Servidor rodando na porta ${process.env.PORT}`);
+  });
+} catch (error) {
+  console.error("Erro ao iniciar o servidor:", error);
+  process.exit(1);
+}
