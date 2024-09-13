@@ -11,17 +11,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v3
-        - name: Use Node.js 14
-          uses: actions/setup-node@v3
-          with:
-            node-version: 14
-            cache: 'npm'
-
-        - run: npm install
-        - run: npm test
+      - uses: actions/checkout@v3
+      - name: Testing Backend
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: 'npm'
+      - run: npm install
+      - run: npm test
 
   build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Login to Docker Hub
@@ -29,13 +29,11 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
       - name: Generate SHA
         id: generate_sha
         run: |
           SHA=$(echo $GITHUB_SHA | head -c7)
           echo "sha=$SHA" >> $GITHUB_OUTPUT
-          
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
