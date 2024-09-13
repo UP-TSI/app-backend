@@ -1,67 +1,71 @@
 const express = require("express");
 const app = express();
 
-// conn
-const Config = require("./config/config.js");
+app.listen('8080', () => {
+  console.log(`Servidor rodando na porta ${'8080'}`);
+});
 
-// Documentation
-const swagger = require("swagger-ui-express");
-const swaggerDocs = require("../swagger.json");
+// // conn
+// const Config = require("./config/config.js");
 
-// Importing routes
-const exampleRouter = require("./routes/example_route/exampleRoute.js");
+// // Documentation
+// const swagger = require("swagger-ui-express");
+// const swaggerDocs = require("../swagger.json");
 
-// Env config
-require("dotenv").config();
+// // Importing routes
+// const exampleRouter = require("./routes/example_route/exampleRoute.js");
 
-//  Middlewares
-// Handling with json
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
-app.use(express.json());
+// // Env config
+// require("dotenv").config();
 
-// Routes
-app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocs)); // Documentation Route
-app.use("/", exampleRouter); // Example Route
+// //  Middlewares
+// // Handling with json
+// app.use(
+//   express.urlencoded({
+//     extended: true,
+//   })
+// );
+// app.use(express.json());
 
-// Função para encerrar o servidor e a conexão com o banco de dados
-async function shutdown() {
-  console.log("Encerrando o servidor...");
+// // Routes
+// app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocs)); // Documentation Route
+// app.use("/", exampleRouter); // Example Route
 
-  // Encerra a conexão com o banco de dados
-  try {
-    await Config.closeConnection();
-  } catch (error) {
-    console.error("Erro ao encerrar a conexão com o banco de dados:", error);
-  }
+// // Função para encerrar o servidor e a conexão com o banco de dados
+// async function shutdown() {
+//   console.log("Encerrando o servidor...");
 
-  // Encerra o servidor Express
-  if (server) {
-    server.close(() => {
-      console.log("Servidor encerrado.");
-      process.exit(0);
-    });
-  } else {
-    process.exit(0);
-  }
-}
+//   // Encerra a conexão com o banco de dados
+//   try {
+//     await Config.closeConnection();
+//   } catch (error) {
+//     console.error("Erro ao encerrar a conexão com o banco de dados:", error);
+//   }
 
-// Captura sinais de encerramento
-process.on("SIGINT", shutdown); // Captura Ctrl+C
-process.on("SIGTERM", shutdown); // Captura término do processo (geralmente enviado por sistemas de gerenciamento)
+//   // Encerra o servidor Express
+//   if (server) {
+//     server.close(() => {
+//       console.log("Servidor encerrado.");
+//       process.exit(0);
+//     });
+//   } else {
+//     process.exit(0);
+//   }
+// }
 
-try {
-  // Inicializa a conexão com o banco
-  Config.startConnection();
+// // Captura sinais de encerramento
+// process.on("SIGINT", shutdown); // Captura Ctrl+C
+// process.on("SIGTERM", shutdown); // Captura término do processo (geralmente enviado por sistemas de gerenciamento)
 
-  // Inicia o servidor Express
-  app.listen(process.env.PORT, () => {
-    console.log(`Servidor rodando na porta ${process.env.PORT}`);
-  });
-} catch (error) {
-  console.error("Erro ao iniciar o servidor:", error);
-  process.exit(1);
-}
+// try {
+//   // Inicializa a conexão com o banco
+//   Config.startConnection();
+
+//   // Inicia o servidor Express
+//   app.listen(process.env.PORT, () => {
+//     console.log(`Servidor rodando na porta ${process.env.PORT}`);
+//   });
+// } catch (error) {
+//   console.error("Erro ao iniciar o servidor:", error);
+//   process.exit(1);
+// }
