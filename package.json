@@ -1,0 +1,18 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "Este repositório contém o código-fonte para o backend da aplicação. O backend é responsável por fornecer APIs para comunicação com o front-end, gerenciar a lógica de negócios e interagir com o banco de dados.",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
