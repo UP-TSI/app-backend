@@ -10,7 +10,7 @@ const swaggerDocs = require("../swagger.json");
 
 // Importing routes
 const exampleRouter = require("./routes/example_route/exampleRoute.js");
-
+const productRouter = require("./routes/product_route/producRoute.js");
 // Env config
 require("dotenv").config();
 
@@ -26,6 +26,7 @@ app.use(express.json());
 // Routes
 app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocs)); // Documentation Route
 app.use("/", exampleRouter); // Example Route
+app.use("/produtos", productRouter);
 
 // Função para encerrar o servidor e a conexão com o banco de dados
 async function shutdown() {
