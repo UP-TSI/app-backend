@@ -13,12 +13,8 @@ require("dotenv").config();
 
 //  Middlewares
 // Handling with json
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocs)); // Documentation Route

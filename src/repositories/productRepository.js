@@ -12,14 +12,46 @@ class ProductRepository {
   }
 
   async getAllProductsFiltered(params) {
-    const { produto, precoCompra, precoVende, qtdeEstoque } = params;
+    const {
+      produto = "",
+      precoCompra = "",
+      relacaoCompra = "",
+      precoVende = "",
+      relacaoVende = "",
+      qtdEstoque = "",
+      relacaoEstoque = "",
+    } = params;
 
-    let whereConditions = "";
+    const whereClauses = [];
+    const values = [];
 
-    if (produto) whereConditions += `Produto = ${produto}`;
-    
+    // Monta as condições dinamicamente
+    if (produto) {
+      whereClauses.push(`Produto LIKE ?`);
+      values.push(`%${produto}%`);
+    }
+    if (precoCompra) {
+      whereClauses.push(`Preco_Compra ${relacaoCompra} ?`);
+      values.push(precoCompra);
+    }
+    if (precoVende) {
+      whereClauses.push(`Preco_Venda ${relacaoVende} ?`);
+      values.push(precoVende);
+    }
+    if (qtdEstoque) {
+      whereClauses.push(`Estoque ${relacaoEstoque} ?`);
+      values.push(qtdEstoque);
+    }
 
-    const sql = "SELECT * FROM tb_Produtos WHERE 1=1";
+    // Se houver condições, adicione WHERE, senão retorne todos os produtos
+    const whereCondition =
+      whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : "";
+
+    const sql = `SELECT * FROM tb_Produtos ${whereCondition}`;
+
+    // Executa a query com os valores da consulta preparada
+    const result = await Config.sql(sql, values);
+    return result;
   }
 }
 

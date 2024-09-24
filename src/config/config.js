@@ -2,7 +2,7 @@ const mysql = require("mysql2/promise");
 
 class Config {
   // Método para executar uma consulta SQL com abertura e fechamento da conexão
-  static async sql(query) {
+  static async sql(query, params = []) {
     let connection = null;
     try {
       // Abre uma nova conexão a cada consulta
@@ -14,8 +14,8 @@ class Config {
       });
       console.log("Conexão ao banco de dados estabelecida.");
 
-      // Executa a consulta
-      const [result] = await connection.execute(query);
+      // Executa a consulta com os parâmetros, se houver
+      const [result] = await connection.execute(query, params);
       return result;
     } catch (error) {
       console.error("Erro ao executar SQL:", error);
