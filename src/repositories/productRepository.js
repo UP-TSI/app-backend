@@ -11,7 +11,7 @@ class ProductRepository {
 
     const sqlSelect = `SELECT * FROM tb_Produtos LIMIT ${porPagina} OFFSET ${offset}`;
 
-    const [rows] = await Config.sql(sqlSelect, [porPagina, offset]);
+    const rows = await Config.sql(sqlSelect, [porPagina, offset]);
 
     const sqlCount = "SELECT COUNT (*) as total FROM tb_Produtos";
     const [countResult] = await Config.sql(sqlCount);
