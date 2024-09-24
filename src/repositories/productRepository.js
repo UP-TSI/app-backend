@@ -7,6 +7,7 @@ class ProductRepository {
   }
 
   async getProductsPaginated(paginaAtual, porPagina){
+    //calculo para saber em qual index deve iniciar a busca no banco
     const offset = (paginaAtual - 1) * porPagina;
 
     const sqlSelect = `SELECT * FROM tb_Produtos LIMIT ${porPagina} OFFSET ${offset}`;
@@ -19,6 +20,7 @@ class ProductRepository {
     const totalItems = countResult.total;
     const totalPaginas = Math.ceil(totalItems/porPagina);
 
+    //objeto de retorno com os valores da paginação
     return {
       paginaAtual: paginaAtual,
       totalPaginas: totalPaginas,

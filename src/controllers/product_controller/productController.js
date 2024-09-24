@@ -7,12 +7,14 @@ class productController {
 
   async listagemProdutos(req, res) {
     try {
+      // Cria a variavel com os valores a serem filtrados
       const paginaAtual = parseInt(req.query.paginaAtual) || 1;
       const porPagina = parseInt(req.query.porPagina) ||  10;
 
+      // Chama a função de repositório passando as variaveis paginaAtual e porPagina
       const result = await this.repository.getProductsPaginated(paginaAtual, porPagina);
 
-      // Retorna os produtos em formato JSON
+      // Retorna os produtos e cria um objeto no formato JSON
       res.status(200).json(result);
     } catch (error) {
       console.log("Erro ao listar produtos: ", error);
