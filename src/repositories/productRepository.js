@@ -6,6 +6,28 @@ class ProductRepository {
     return await Config.sql(sql);
   }
 
+  async getProductsPaginated(paginaAtual, porPagina){
+    const offset = (paginaAtual - 1) * porPagina;
+
+    const sqlSelect = `SELECT * FROM tb_Produtos LIMIT ${porPagina} OFFSET ${offset}`;
+
+    const [rows] = await Config.sql(sqlSelect, [porPagina, offset]);
+
+    const sqlCount = "SELECT COUNT (*) as total FROM tb_Produtos";
+    const [countResult] = await Config.sql(sqlCount);
+
+    const totalItems = countResult.total;
+    const totalPaginas = Math.ceil(totalItems/porPagina);
+
+    return {
+      paginaAtual: paginaAtual,
+      totalPaginas: totalPaginas,
+      totalItems: totalItems,
+      porPagina: porPagina,
+      produtos: rows,
+    };
+  }
+
   async getProductById(id) {
     const sql = "SELECT * FROM tb_Produtos WHERE id =?";
     return await Config.sql(sql, [id]);

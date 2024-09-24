@@ -7,31 +7,10 @@ class productController {
 
   async listagemProdutos(req, res) {
     try {
-      // const paginaAtual = parseInt(req.query.paginaAtual) || 1;
-      // const porPagina = parseInt(req.query.porPagina) ||  10;
-      // const offset = (paginaAtual - 1) * porPagina;
+      const paginaAtual = parseInt(req.query.paginaAtual) || 1;
+      const porPagina = parseInt(req.query.porPagina) ||  10;
 
-      // const [rows] = await connection.execute(
-      //     "SELECT * FROM produtos PORPAGINA ? OFFSET ?",
-      //     [porPagina, offset]
-      // );
-
-      // const [countResult] = await connection.execute(
-      //     "SELECT COUNT (*) as total FROM produtos"
-      // );
-
-      // const totalItems = countResult[0].total;
-      // const totalPaginas = Math.ceil(totalItems/porPagina);
-
-      // res.status(200).json({
-      //     paginaAtual: paginaAtual,
-      //     totalPaginas: totalPaginas,
-      //     totalItems: totalItems,
-      //     porPagina: porPagina,
-      //     produtos: rows,
-      // });
-
-      const result = await this.repository.getAllProducts();
+      const result = await this.repository.getProductsPaginated(paginaAtual, porPagina);
 
       // Retorna os produtos em formato JSON
       res.status(200).json(result);
