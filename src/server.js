@@ -1,9 +1,6 @@
 const express = require("express");
 const app = express();
 
-// conn
-const Config = require("./config/config.js");
-
 // Documentation
 const swagger = require("swagger-ui-express");
 const swaggerDocs = require("../swagger.json");
@@ -55,9 +52,6 @@ process.on("SIGINT", shutdown); // Captura Ctrl+C
 process.on("SIGTERM", shutdown); // Captura término do processo (geralmente enviado por sistemas de gerenciamento)
 
 try {
-  // Inicializa a conexão com o banco
-  Config.startConnection();
-
   // Inicia o servidor Express
   app.listen(process.env.PORT, () => {
     console.log(`Servidor rodando na porta ${process.env.PORT}`);
