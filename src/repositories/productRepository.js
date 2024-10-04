@@ -6,7 +6,7 @@ class ProductRepository {
     return await Config.sql(sql);
   }
 
-  async getProductsPaginated(paginaAtual, porPagina){
+  async getProductsPaginated(paginaAtual, porPagina) {
     //calculo para saber em qual index deve iniciar a busca no banco
     const offset = (paginaAtual - 1) * porPagina;
 
@@ -18,7 +18,7 @@ class ProductRepository {
     const [countResult] = await Config.sql(sqlCount);
 
     const totalItems = countResult.total;
-    const totalPaginas = Math.ceil(totalItems/porPagina);
+    const totalPaginas = Math.ceil(totalItems / porPagina);
 
     //objeto de retorno com os valores da paginação
     return {
@@ -30,9 +30,9 @@ class ProductRepository {
     };
   }
 
-  async getProductById(id) {
-    const sql = "SELECT * FROM tb_Produtos WHERE id =?";
-    return await Config.sql(sql, [id]);
+  async getProductByCod(codigo) {
+    const sql = "SELECT * FROM tb_Produtos WHERE Codigo_Barras =?";
+    return await Config.sql(sql, [codigo]);
   }
 
   async getAllProductsFiltered(params) {
