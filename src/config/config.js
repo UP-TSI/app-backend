@@ -1,38 +1,33 @@
 const mysql = require("mysql2/promise");
 
 class Config {
-  static connection = null;
+  // Método para executar uma consulta SQL com abertura e fechamento da conexão
+  static async sql(query, params = []) {
+    let connection = null;
+    try {
+      // Abre uma nova conexão a cada consulta
+      connection = await mysql.createConnection({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: process.env.DB_NAME,
+      });
+      console.log("Conexão ao banco de dados estabelecida.");
 
-  // Iniciar a conexão com o banco de dados
-  static async startConnection() {
-    if (!this.connection) {
-      try {
-        this.connection = await mysql.createConnection({
-          host: process.env.DB_HOST,
-          user: process.env.DB_USER,
-          password: process.env.DB_PASS,
-          database: process.env.DB_NAME,
-        });
-        console.log("Conexão ao banco de dados bem-sucedida!");
-      } catch (error) {
-        console.error("Erro ao conectar ao MySQL:", error);
-        throw error;
-      }
-    } else {
-      return this.connection;
-    }
-  }
-
-  // Fechar a conexão
-  static async closeConnection() {
-    if (this.connection) {
-      try {
-        await this.connection.end();
-        this.connection = null; // Resetar a conexão
-        console.log("Conexão ao banco de dados encerrada.");
-      } catch (error) {
-        console.error("Erro ao fechar a conexão ao MySQL:", error);
-        throw error;
+      // Executa a consulta com os parâmetros, se houver
+      const [result] = await connection.execute(query, params);
+      return result;
+    } catch (error) {
+      console.error("Erro ao executar SQL:", error);
+      throw error;
+    } finally {
+      if (connection) {
+        try {
+          await connection.end(); // Fecha a conexão após a consulta
+          console.log("Conexão ao banco de dados encerrada.");
+        } catch (closeError) {
+          console.error("Erro ao fechar a conexão ao MySQL:", closeError);
+        }
       }
     }
   }

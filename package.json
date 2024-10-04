@@ -1,18 +1,26 @@
 {
-  "name": "back-end",
+  "name": "prototipo",
   "version": "1.0.0",
-  "description": "Este repositório contém o código-fonte para o backend da aplicação. O backend é responsável por fornecer APIs para comunicação com o front-end, gerenciar a lógica de negócios e interagir com o banco de dados.",
-  "main": "src/server.js",
+  "description": "",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js",
     "dev": "nodemon src/server.js"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "express": "^4.21.0"
-  },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^3.1.4"
+  }, 
+  "dependencies": {
+    "@types/swagger-ui-express": "^4.1.6",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "install": "^0.13.0",
+    "mysql2": "^3.11.1",
+    "npm": "^10.8.3",
+    "swagger-ui-express": "^5.0.1"
   }
 }
