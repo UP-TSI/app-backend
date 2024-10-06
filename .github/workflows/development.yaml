@@ -1,0 +1,37 @@
+name: Development Deploy
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Testing Backend
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: 'npm'
+      - run: npm install
+      - run: npm test
+      
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+      - name: Deploy to cPanel
+        id: deploy
+        uses: pinkasey/cpanel-deploy-action@v1.0.0
+        with:
+          hostname: ${{ vars.CPANEL_DOMAIN }}
+          repository_root: ${{ vars.CPANEL_REPOSITORIES_PATH }}/dev/
+          branch: ${{ steps.extract_branch.outputs.branch }}
+          cpanel_token: ${{ secrets.CPANEL_TOKEN }}
+      - name: echo deploy-duration
+        run: echo "Deployment took ${{ steps.deploy.outputs.duration }} milliseconds"
