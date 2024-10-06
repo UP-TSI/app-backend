@@ -33,5 +33,6 @@ jobs:
           repository_root: ${{ vars.CPANEL_REPOSITORIES_PATH }}
           cpanel_username: ${{ secrets.CPANEL_USERNAME }}
           cpanel_token: ${{ secrets.CPANEL_API_TOKEN_DEV }}
+          branch: main
       - name: echo deploy-duration
         run: echo "Deployment took ${{ steps.deploy.outputs.duration }} milliseconds"
