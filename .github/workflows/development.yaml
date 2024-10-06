@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Testing Backend
+      - name: 🧪 Testing Backend
         uses: actions/setup-node@v3
         with:
           node-version: 14
@@ -21,16 +21,16 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - name: Extract branch name
+      - name: 🧩 Extract branch name
         shell: bash
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
-      - name: Deploy to cPanel
+      - name: 🚀 Deploy to cPanel
         id: deploy
         uses: pinkasey/cpanel-repository-action@v1.0.0
         with:
           hostname: ${{ vars.CPANEL_DOMAIN }}
-          repository_root: ${{ vars.CPANEL_REPOSITORIES_PATH }}
+          repository_root: ${{ vars.CPANEL_REPOSITORIES_PATH }}-dev
           cpanel_username: ${{ secrets.CPANEL_USERNAME }}
           cpanel_token: ${{ secrets.CPANEL_API_TOKEN_DEV }}
           branch: ${{ steps.extract_branch.outputs.branch }}
