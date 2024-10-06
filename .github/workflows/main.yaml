@@ -1,4 +1,4 @@
-name: Deploying on Docker Hub
+name: 🚀 Production Deploy
 
 on:
   push:
@@ -30,6 +30,6 @@ jobs:
           repository_root: ${{ vars.CPANEL_REPOSITORIES_PATH }}-prod
           cpanel_username: ${{ secrets.CPANEL_USERNAME }}
           cpanel_token: ${{ secrets.CPANEL_API_TOKEN_PROD }}
-          branch: ${{ steps.extract_branch.outputs.branch }}
+          branch: main
       - name: echo deploy-duration
         run: echo "Deployment took ${{ steps.deploy.outputs.duration }} milliseconds"

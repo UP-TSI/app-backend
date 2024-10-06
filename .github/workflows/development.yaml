@@ -1,4 +1,4 @@
-name: Development Deploy
+name: 🚀 Development Deploy
 
 on:
   pull_request:
