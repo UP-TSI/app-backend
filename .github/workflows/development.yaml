@@ -27,13 +27,12 @@ jobs:
         id: extract_branch
       - name: Deploy to cPanel
         id: deploy
-        uses: pinkasey/cpanel-deploy-action@v1.0.0
+        uses: pinkasey/cpanel-repository-action@v1.0.0
         with:
           hostname: ${{ vars.CPANEL_DOMAIN }}
           repository_root: ${{ vars.CPANEL_REPOSITORIES_PATH }}
           cpanel_username: ${{ secrets.CPANEL_USERNAME }}
           cpanel_token: ${{ secrets.CPANEL_API_TOKEN_DEV }}
-          updateRepository: true
           branch: main
       - name: echo deploy-duration
         run: echo "Deployment took ${{ steps.deploy.outputs.duration }} milliseconds"
