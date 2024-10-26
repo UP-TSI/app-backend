@@ -31,7 +31,7 @@ jobs:
         with:
           hostname: ${{ secrets.CPANEL_DOMAIN }}
           cPanelApiPort: 2082
-          repository_root: ${{ secrets.CPANEL_REPOSITORIES_PATH }}-dev
+          repository_root: ${{ vars.CPANEL_REPOSITORIES_PATH }}-backend-dev
           cpanel_username: ${{ secrets.CPANEL_USERNAME }}
           cpanel_token: ${{ secrets.CPANEL_API_TOKEN_DEV }}
           branch: ${{ steps.extract_branch.outputs.branch }}
