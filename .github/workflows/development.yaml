@@ -30,7 +30,7 @@ jobs:
         uses: pinkasey/cpanel-repository-action@v1.0.0
         with:
           hostname: ${{ vars.CPANEL_DOMAIN }}
-          repository_root: ${{ vars.CPANEL_REPOSITORIES_PATH }}-dev
+          repository_root: ${{ secrets.CPANEL_REPOSITORIES_PATH }}-dev
           cpanel_username: ${{ secrets.CPANEL_USERNAME }}
           cpanel_token: ${{ secrets.CPANEL_API_TOKEN_DEV }}
           branch: ${{ steps.extract_branch.outputs.branch }}
