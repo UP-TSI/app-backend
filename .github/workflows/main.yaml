@@ -22,7 +22,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - name: 🚀 Deploy to cPanel
+      - name: 🚀 Deploy to cPanel 
         id: deploy
         uses: pinkasey/cpanel-repository-action@v1.0.0
         with:
