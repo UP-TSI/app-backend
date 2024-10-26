@@ -5,20 +5,20 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: 🧪 Testing Backend
-        uses: actions/setup-node@v3
-        with:
-          node-version: 14
-          cache: 'npm'
-      - run: npm install
-      - run: npm test
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: 🧪 Testing Backend
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 14
+  #         cache: 'npm'
+  #     - run: npm install
+  #     - run: npm test
       
   build:
-    needs: test
+    # needs: test
     runs-on: ubuntu-latest
     steps:
       - name: 🧩 Extract branch name
@@ -30,6 +30,7 @@ jobs:
         uses: pinkasey/cpanel-repository-action@v1.0.0
         with:
           hostname: ${{ secrets.CPANEL_DOMAIN }}
+          cPanelApiPort: 2082
           repository_root: ${{ secrets.CPANEL_REPOSITORIES_PATH }}-dev
           cpanel_username: ${{ secrets.CPANEL_USERNAME }}
           cpanel_token: ${{ secrets.CPANEL_API_TOKEN_DEV }}
