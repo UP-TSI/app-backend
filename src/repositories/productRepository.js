@@ -52,6 +52,9 @@ class ProductRepository {
       perPage = 10,
     } = params;
 
+    // Calculando offset
+    const offset = (currentPage - 1) * perPage;
+
     // Inicializa as condições e os valores para a consulta
     const whereClauses = [];
     const values = [];
@@ -104,7 +107,7 @@ class ProductRepository {
       : "";
 
     // Exemplo de consulta SQL montada
-    const sql = `SELECT *, (Preco_Venda - Preco_Compra) as Lucro FROM  tb_Produtos ${whereClause}  LIMIT ${perPage} OFFSET ${currentPage}`;
+    const sql = `SELECT *, (Preco_Venda - Preco_Compra) as Lucro FROM  tb_Produtos ${whereClause}  LIMIT ${perPage} OFFSET ${offset}`;
 
     // Executa a query com os valores da consulta preparada
     const result = await Config.sql(sql, values);
