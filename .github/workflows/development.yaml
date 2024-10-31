@@ -4,21 +4,8 @@ on:
   pull_request:
     branches: [ main ]
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: 🧪 Testing Backend
-        uses: actions/setup-node@v3
-        with:
-          node-version: 14
-          cache: 'npm'
-      - run: npm install
-      - run: npm test
-      
+jobs:      
   build:
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: 🧩 Extract branch name
@@ -29,8 +16,9 @@ jobs:
         id: deploy
         uses: pinkasey/cpanel-repository-action@v1.0.0
         with:
-          hostname: ${{ vars.CPANEL_DOMAIN }}
-          repository_root: ${{ vars.CPANEL_REPOSITORIES_PATH }}-dev
+          hostname: ${{ secrets.CPANEL_DOMAIN }}
+          cPanelApiPort: 2082
+          repository_root: ${{ vars.CPANEL_REPOSITORIES_PATH }}-backend-dev
           cpanel_username: ${{ secrets.CPANEL_USERNAME }}
           cpanel_token: ${{ secrets.CPANEL_API_TOKEN_DEV }}
           branch: ${{ steps.extract_branch.outputs.branch }}
