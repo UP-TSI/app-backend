@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 
 // Documentation
@@ -15,6 +16,17 @@ require("dotenv").config();
 // Handling with json
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Configuração do CORS
+const corsOptions = {
+  origin: "*", // Permitir apenas essa origem
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Métodos permitidos
+  credentials: true, // Permitir cookies e cabeçalhos de autorização
+  optionsSuccessStatus: 204, // Para alguns navegadores antigos
+};
+
+// Aplicar o middleware CORS
+app.use(cors(corsOptions));
 
 // Routes
 app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocs)); // Documentation Route

@@ -103,8 +103,6 @@ class ProductRepository {
       ? `WHERE ${whereClauses.join(" AND ")}`
       : "";
 
-    console.log(whereClause);
-
     // Exemplo de consulta SQL montada
     const sql = `SELECT *, (Preco_Venda - Preco_Compra) as Lucro FROM  tb_Produtos ${whereClause}  LIMIT ${perPage} OFFSET ${currentPage}`;
 
