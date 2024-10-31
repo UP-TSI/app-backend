@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocs)); // Documentation Route
 app.use("/", exampleRouter); // Example Route
-app.use("/produtos", productRouter);
+app.use("/products", productRouter);
 
 // Função para encerrar o servidor e a conexão com o banco de dados
 async function shutdown() {

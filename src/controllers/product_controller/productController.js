@@ -28,24 +28,34 @@ class productController {
   async filtragemProdutos(req, res) {
     try {
       const {
-        produto = "",
-        precoCompra = "",
-        relacaoCompra = "=",
-        precoVende = "",
-        relacaoVende = "=",
-        qtdEstoque = "",
-        relacaoEstoque = "=",
-      } = req.body;
+        equalTo = "",
+        nameIncludes = "",
+        purchaseValueMin = "",
+        purchaseValueMax = "",
+        saleValueMin = "",
+        saleValueMax = "",
+        profitMin = "",
+        profitMax = "",
+        quantityMin = "",
+        quantityMax = "",
+        currentPage = 0,
+        perPage = 10,
+      } = req.query;
 
       // Cria o objeto com os parâmetros a serem filtrados
       const params = {
-        produto,
-        precoCompra,
-        relacaoCompra,
-        precoVende,
-        relacaoVende,
-        qtdEstoque,
-        relacaoEstoque,
+        equalTo,
+        nameIncludes,
+        purchaseValueMin,
+        purchaseValueMax,
+        saleValueMin,
+        saleValueMax,
+        profitMin,
+        profitMax,
+        quantityMin,
+        quantityMax,
+        currentPage,
+        perPage,
       };
 
       // Chama a função de repositório passando o objeto params
@@ -61,7 +71,7 @@ class productController {
 
   async buscarProdutoPorCodigo(req, res) {
     try {
-      const { codigo } = req.body;
+      const { codigo } = req.query;
 
       // Chama a função de repositório passando o código do produto
       const result = await this.repository.getProductByCod(codigo);
