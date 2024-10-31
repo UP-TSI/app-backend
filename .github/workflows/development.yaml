@@ -4,21 +4,8 @@ on:
   pull_request:
     branches: [ main ]
 
-jobs:
-  # test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: 🧪 Testing Backend
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 14
-  #         cache: 'npm'
-  #     - run: npm install
-  #     - run: npm test
-      
+jobs:      
   build:
-    # needs: test
     runs-on: ubuntu-latest
     steps:
       - name: 🧩 Extract branch name
