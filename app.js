@@ -1,13 +1,13 @@
 const express = require("express");
-const app = express(); 
+const app = express();
 
 // Documentation
 const swagger = require("swagger-ui-express");
-const swaggerDocs = require("./swagger.json");
+const swaggerDocs = require("../swagger.json");
 
 // Importing routes
-const exampleRouter = require("./src/routes/example_route/exampleRoute.js");
-const productRouter = require("./src/routes/product_route/producRoute.js");
+const exampleRouter = require("./routes/example_route/exampleRoute.js");
+const productRouter = require("./routes/product_route/producRoute.js");
 // Env config
 require("dotenv").config();
 
