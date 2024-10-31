@@ -48,7 +48,7 @@ class ProductRepository {
       profitMax,
       quantityMin,
       quantityMax,
-      currentPage = 0,
+      currentPage = 1,
       perPage = 10,
     } = params;
 
