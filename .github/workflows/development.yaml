@@ -1,8 +1,9 @@
 name: 🚀 Development Deploy
 
 on:
-  pull_request:
-    branches: [ main ]
+  push:
+    branches:
+      - develop
 
 jobs:      
   build:
@@ -12,6 +13,7 @@ jobs:
         shell: bash
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
+        
       - name: 🚀 Deploy to cPanel
         id: deploy
         uses: pinkasey/cpanel-repository-action@v1.0.0
@@ -21,6 +23,7 @@ jobs:
           repository_root: ${{ vars.CPANEL_REPOSITORIES_PATH }}-backend-dev
           cpanel_username: ${{ secrets.CPANEL_USERNAME }}
           cpanel_token: ${{ secrets.CPANEL_API_TOKEN_DEV }}
-          branch: ${{ steps.extract_branch.outputs.branch }}
+          branch: develop
+          
       - name: echo deploy-duration
         run: echo "Deployment took ${{ steps.deploy.outputs.duration }} milliseconds"
