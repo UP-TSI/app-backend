@@ -48,9 +48,12 @@ class ProductRepository {
       profitMax,
       quantityMin,
       quantityMax,
-      currentPage = 0,
+      currentPage = 1,
       perPage = 10,
     } = params;
+
+    // Calculando offset
+    const offset = (currentPage - 1) * perPage;
 
     // Inicializa as condições e os valores para a consulta
     const whereClauses = [];
@@ -103,14 +106,39 @@ class ProductRepository {
       ? `WHERE ${whereClauses.join(" AND ")}`
       : "";
 
-    console.log(whereClause);
-
     // Exemplo de consulta SQL montada
-    const sql = `SELECT *, (Preco_Venda - Preco_Compra) as Lucro FROM  tb_Produtos ${whereClause}  LIMIT ${perPage} OFFSET ${currentPage}`;
+    const sql = `
+                SELECT 
+                    Codigo_Barras AS cod_barras,
+                    Produto AS nome,
+                    FORMAT(Preco_Compra, 2) AS v_compra,
+                    FORMAT(Preco_Venda, 2) AS v_venda,
+                    FORMAT((Preco_Venda - Preco_Compra), 2) AS lucro,
+                    Estoque AS estoque
+                FROM 
+                    tb_Produtos
+                ${whereClause}  
+                LIMIT ${perPage} 
+                OFFSET ${offset}`;
 
     // Executa a query com os valores da consulta preparada
-    const result = await Config.sql(sql, values);
-    return result;
+    const mainData = await Config.sql(sql, values);
+
+    // Dados do Pagination
+    const sqlCount = "SELECT COUNT (*) as total FROM tb_Produtos";
+    const [countResult] = await Config.sql(sqlCount);
+
+    const totalItems = countResult.total;
+    const totalPages = Math.ceil(totalItems / perPage);
+
+    let pagination = {
+      currentPage: currentPage,
+      totalItems: totalItems,
+      totalPages: totalPages,
+      perPage: perPage,
+    };
+
+    return { pagination, mainData };
   }
 }
 
