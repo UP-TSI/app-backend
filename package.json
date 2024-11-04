@@ -1,7 +1,7 @@
 {
   "name": "prototipo",
   "version": "1.0.0",
-  "description": "",
+  "description": "Este repositório contém o código-fonte para o backend da aplicação. O backend é responsável por fornecer APIs para comunicação com o front-end, gerenciar a lógica de negócios e interagir com o banco de dados.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"No tests specified\" && exit 0",
@@ -22,6 +22,7 @@
     "install": "^0.13.0",
     "mysql2": "^3.11.1",
     "npm": "^10.8.3",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^11.0.2"
   }
 }
