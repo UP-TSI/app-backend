@@ -1,15 +1,17 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 
 // Documentation
 const swagger = require("swagger-ui-express");
-const swaggerDocs = require("../swagger.json");
+const swaggerDocs = require("./swagger.json");
 
 // Importing routes
-const exampleRouter = require("./routes/example_route/exampleRoute.js");
-const productRouter = require("./routes/product_route/productRoute.js");
-const clientRouter = require("./routes/client_route/clientRoute.js");
-const authRoutes = require('./routes/authRoutes');
+
+const clientRouter = require("./src/routes/client_route/clientRoute.js");
+const authRoutes = require('./src/routes/authRoutes');
+const exampleRouter = require("./src/routes/example_route/exampleRoute.js");
+const productRouter = require("./src/routes/product_route/producRoute.js");
 // Env config
 require("dotenv").config();
 
@@ -18,12 +20,23 @@ require("dotenv").config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Configuração do CORS
+const corsOptions = {
+  origin: "*", // Permitir apenas essa origem
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Métodos permitidos
+  credentials: true, // Permitir cookies e cabeçalhos de autorização
+  optionsSuccessStatus: 204, // Para alguns navegadores antigos
+};
+
+// Aplicar o middleware CORS
+app.use(cors(corsOptions));
+
 // Routes
 app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocs)); // Documentation Route
 app.use("/", exampleRouter); // Example Route
-app.use("/produtos", productRouter);
 app.use("/clientes", clientRouter);
-app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
+app.use("/products", productRouter);
 
 // Função para encerrar o servidor e a conexão com o banco de dados
 async function shutdown() {

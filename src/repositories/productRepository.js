@@ -1,4 +1,5 @@
 const Config = require("../config/config.js");
+const { Utils } = require("../utils/util.js");
 
 class ProductRepository {
   async getAllProducts() {
@@ -37,45 +38,107 @@ class ProductRepository {
 
   async getAllProductsFiltered(params) {
     const {
-      produto = "",
-      precoCompra = "",
-      relacaoCompra = "",
-      precoVende = "",
-      relacaoVende = "",
-      qtdEstoque = "",
-      relacaoEstoque = "",
+      equalTo,
+      nameIncludes,
+      purchaseValueMin,
+      purchaseValueMax,
+      saleValueMin,
+      saleValueMax,
+      profitMin,
+      profitMax,
+      quantityMin,
+      quantityMax,
+      currentPage = 1,
+      perPage = 10,
     } = params;
 
+    // Calculando offset
+    const offset = (currentPage - 1) * perPage;
+
+    // Inicializa as condições e os valores para a consulta
     const whereClauses = [];
     const values = [];
 
     // Monta as condições dinamicamente
-    if (produto) {
+    if (equalTo) {
+      whereClauses.push(`Produto = ?`);
+      values.push(equalTo);
+    }
+    if (nameIncludes) {
       whereClauses.push(`Produto LIKE ?`);
-      values.push(`%${produto}%`);
+      values.push(`%${nameIncludes}%`);
     }
-    if (precoCompra) {
-      whereClauses.push(`Preco_Compra ${relacaoCompra} ?`);
-      values.push(precoCompra);
+    if (purchaseValueMin) {
+      whereClauses.push(`Preco_Compra >= ?`);
+      values.push(purchaseValueMin);
     }
-    if (precoVende) {
-      whereClauses.push(`Preco_Venda ${relacaoVende} ?`);
-      values.push(precoVende);
+    if (purchaseValueMax) {
+      whereClauses.push(`Preco_Compra <= ?`);
+      values.push(purchaseValueMax);
     }
-    if (qtdEstoque) {
-      whereClauses.push(`Estoque ${relacaoEstoque} ?`);
-      values.push(qtdEstoque);
+    if (saleValueMin) {
+      whereClauses.push(`Preco_Venda >= ?`);
+      values.push(saleValueMin);
+    }
+    if (saleValueMax) {
+      whereClauses.push(`Preco_Venda <= ?`);
+      values.push(saleValueMax);
+    }
+    if (profitMin) {
+      whereClauses.push(`(Preco_Venda - Preco_Compra)  >= ?`);
+      values.push(profitMin);
+    }
+    if (profitMax) {
+      whereClauses.push(`(Preco_Venda - Preco_Compra)  <= ?`);
+      values.push(profitMax);
+    }
+    if (quantityMin) {
+      whereClauses.push(`Estoque >= ?`);
+      values.push(quantityMin);
+    }
+    if (quantityMax) {
+      whereClauses.push(`Estoque <= ?`);
+      values.push(quantityMax);
     }
 
-    // Se houver condições, adicione WHERE, senão retorne todos os produtos
-    const whereCondition =
-      whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : "";
+    // Concatena as cláusulas `WHERE`
+    const whereClause = whereClauses.length
+      ? `WHERE ${whereClauses.join(" AND ")}`
+      : "";
 
-    const sql = `SELECT * FROM tb_Produtos ${whereCondition}`;
+    // Exemplo de consulta SQL montada
+    const sql = `
+                SELECT 
+                    Codigo_Barras AS cod_barras,
+                    Produto AS nome,
+                    FORMAT(Preco_Compra, 2) AS v_compra,
+                    FORMAT(Preco_Venda, 2) AS v_venda,
+                    FORMAT((Preco_Venda - Preco_Compra), 2) AS lucro,
+                    Estoque AS estoque
+                FROM 
+                    tb_Produtos
+                ${whereClause}  
+                LIMIT ${perPage} 
+                OFFSET ${offset}`;
 
     // Executa a query com os valores da consulta preparada
-    const result = await Config.sql(sql, values);
-    return result;
+    const mainData = await Config.sql(sql, values);
+
+    // Dados do Pagination
+    const sqlCount = `SELECT COUNT (*) as total FROM tb_Produtos ${whereClause}`;
+    const [countResult] = await Config.sql(sqlCount, values);
+
+    const totalItems = countResult.total;
+    const totalPages = Math.ceil(totalItems / perPage);
+
+    let pagination = {
+      currentPage: currentPage,
+      totalItems: totalItems,
+      totalPages: totalPages,
+      perPage: perPage,
+    };
+
+    return { pagination, mainData };
   }
 }
 
