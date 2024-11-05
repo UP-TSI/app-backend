@@ -1,4 +1,4 @@
-const db = require('../config/database'); // Ajuste conforme sua configuração
+const db = require('../config/config');
 const bcrypt = require('bcryptjs');
 
 class User {

@@ -11,7 +11,7 @@ const swaggerDocs = require("./swagger.json");
 const clientRouter = require("./src/routes/client_route/clientRoute.js");
 const authRoutes = require('./src/routes/authRoutes');
 const exampleRouter = require("./src/routes/example_route/exampleRoute.js");
-const productRouter = require("./src/routes/product_route/producRoute.js");
+const productRouter = require("./src/routes/product_route/productRoute.js");
 // Env config
 require("dotenv").config();
 
