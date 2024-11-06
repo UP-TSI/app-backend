@@ -125,8 +125,8 @@ class ProductRepository {
     const mainData = await Config.sql(sql, values);
 
     // Dados do Pagination
-    const sqlCount = "SELECT COUNT (*) as total FROM tb_Produtos";
-    const [countResult] = await Config.sql(sqlCount);
+    const sqlCount = `SELECT COUNT (*) as total FROM tb_Produtos ${whereClause}`;
+    const [countResult] = await Config.sql(sqlCount, values);
 
     const totalItems = countResult.total;
     const totalPages = Math.ceil(totalItems / perPage);

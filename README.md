@@ -33,7 +33,7 @@ O projeto segue a seguinte estrutura de diretórios:
 
 1. Clonar o projeto `git clone https://github.com/UP-TSI/Back-End`
 2. Navegue até o diretório e instale as dependências `npm install`
-3. Crie um arquivo `.env` na raiz do projeto, contendo estas variáveis e seus valores
+3. Crie um arquivo `.env` na raiz do projeto, contendo estas variáveis e seus valores 
 ```
 - DB_HOST=
 - DB_USER=

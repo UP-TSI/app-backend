@@ -7,8 +7,11 @@ const swagger = require("swagger-ui-express");
 const swaggerDocs = require("./swagger.json");
 
 // Importing routes
+
+const clientRouter = require("./src/routes/client_route/clientRoute.js");
+const authRoutes = require('./src/routes/authRoutes');
 const exampleRouter = require("./src/routes/example_route/exampleRoute.js");
-const productRouter = require("./src/routes/product_route/producRoute.js");
+const productRouter = require("./src/routes/product_route/productRoute.js");
 // Env config
 require("dotenv").config();
 
@@ -31,6 +34,8 @@ app.use(cors(corsOptions));
 // Routes
 app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocs)); // Documentation Route
 app.use("/", exampleRouter); // Example Route
+app.use("/clientes", clientRouter);
+app.use('/auth', authRoutes);
 app.use("/products", productRouter);
 
 // Função para encerrar o servidor e a conexão com o banco de dados
