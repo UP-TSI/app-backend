@@ -1,25 +1,12 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
-
-exports.register = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    const { username, password } = req.body;
-
-    try {
-        const userId = await User.create(username, password);
-        res.status(201).json({ id: userId, username });
-    } catch (error) {
-        res.status(500).json({ error: 'Error creating user' });
-    }
-};
+const Config = require('../../config/config');
 
 exports.login = async (req, res) => {
     const { username, password } = req.body;
-    const user = await User.findByUsername(username);
+    const sql = 'SELECT usuario, senha, id_ambiente FROM users WHERE username = ? LIMIT 1'
+    const user = await Config.sql(sql, [username])
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
         return res.status(401).json({ message: 'Invalid credentials' });
