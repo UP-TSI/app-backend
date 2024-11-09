@@ -17,6 +17,35 @@ class AuthRepository {
             `;
 
             const [user] = await Config.sql(sql, [username.trim()]);
+
+            if (!user) {
+                console.log(`Usuário ${username} não encontrado.`);
+                return null;
+            }
+    
+            return user;
+        } catch (error) {
+            console.log(`Erro ao encontrar usuário ${username}.`, error);
+            throw error;
+        }
+    }
+
+    async findUserByName(username) {
+        try {
+            if (!username || typeof username !== 'string' || username.trim() === '') {
+                console.log("Nome de usuário inválido.");
+                return null;
+            }
+            
+            const sql = `
+                SELECT tu.usuario, ta.Nome 
+                FROM tb_Usuario tu 
+                JOIN tb_Ambientes as ta
+                    ON tu.id_ambiente = ta.Codigo 
+                WHERE usuario = ?;
+            `;
+
+            const [user] = await Config.sql(sql, [username.trim()]);
     
             console.log(user);
 

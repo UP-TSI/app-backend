@@ -33,6 +33,28 @@ class AuthController {
             return res.status(500).json({ message: 'Internal server error' });
         }
     }
+
+    async findUser(req, res) {
+        try {
+            const { username } = req.body;
+
+            if (!username) {
+                return res.status(400).json({ message: 'Username and password are required' });
+            }
+
+            const user = await this.repository.findUserByName(username);
+
+            if (!user) {
+                return res.status(401).json({ message: 'Invalid credentials' });
+            }
+
+            return res.json({ Token: token, Id: user.id_ambiente, Nome:user.Nome });
+
+        } catch (error) {
+            console.error("Erro no login:", error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
 }
 
 module.exports = AuthController;
