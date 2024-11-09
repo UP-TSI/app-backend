@@ -37,6 +37,7 @@ class AuthController {
     async findUser(req, res) {
         try {
             const { username } = req.body;
+            console.log(username)
 
             if (!username) {
                 return res.status(400).json({ message: 'Username are required' });
@@ -48,7 +49,7 @@ class AuthController {
                 return res.status(401).json({ message: 'Invalid credentials' });
             }
 
-            return res.json({ name: user.name });
+            return res.json({ name: user.Nome });
 
         } catch (error) {
             console.error("Erro no login:", error);
