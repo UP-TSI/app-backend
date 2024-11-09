@@ -9,15 +9,17 @@ class AuthController {
     async login(req, res) {
         try {
             const { username, password } = req.body;
-            console.log(`username:${username} password:${password}`);
 
             if (!username || !password) {
                 return res.status(400).json({ message: 'Username and password are required' });
             }
 
             const user = await this.repository.findUserByName(username);
-
-            if (!user || !(user.senha === password)) {
+            
+            // console.log(user)
+            console.log(`Usuário: ${user.usuario}, Senha: ${user.senha} == ${password}`);
+            
+            if (!user || !(user.senha == password)) {
                 return res.status(401).json({ message: 'Invalid credentials' });
             }
 
