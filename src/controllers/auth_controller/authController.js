@@ -26,7 +26,7 @@ class AuthController {
                 process.env.JWT_SECRET,
                 { expiresIn: '1h' }
             );
-            return res.json({ Token: token, Id: user.id_ambiente, Nome:user.Nome });
+            return res.json({ token: token, id: user.id_ambiente });
 
         } catch (error) {
             console.error("Erro no login:", error);
@@ -39,7 +39,7 @@ class AuthController {
             const { username } = req.body;
 
             if (!username) {
-                return res.status(400).json({ message: 'Username and password are required' });
+                return res.status(400).json({ message: 'Username are required' });
             }
 
             const user = await this.repository.findUserByName(username);
@@ -48,7 +48,7 @@ class AuthController {
                 return res.status(401).json({ message: 'Invalid credentials' });
             }
 
-            return res.json({ Token: token, Id: user.id_ambiente, Nome:user.Nome });
+            return res.json({ name: user.name });
 
         } catch (error) {
             console.error("Erro no login:", error);
