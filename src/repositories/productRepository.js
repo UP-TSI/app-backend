@@ -1,5 +1,4 @@
 const Config = require("../config/config.js");
-const { Utils } = require("../utils/util.js");
 
 class ProductRepository {
   async getAllProducts() {

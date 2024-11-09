@@ -1,15 +1,38 @@
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const Config = require('../../config/config');
+const AuthRepository = require('../../repositories/authRepository.js');
 
-exports.login = async (req, res) => {
-    const { username, password } = req.body;
-    const sql = 'SELECT usuario, senha, id_ambiente FROM users WHERE username = ? LIMIT 1'
-    const user = await Config.sql(sql, [username])
-
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-        return res.status(401).json({ message: 'Invalid credentials' });
+class AuthController {
+    constructor() {
+        this.repository = new AuthRepository();
     }
 
-    const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
-};
+    async login(req, res) {
+        try {
+            const { username, password } = req.body;
+
+            if (!username || !password) {
+                return res.status(400).json({ message: 'Username and password are required' });
+            }
+
+            const user = await this.repository.findUserByName(username);
+
+            if (!user || !(user.senha === password)) {
+                return res.status(401).json({ message: 'Invalid credentials' });
+            }
+
+            const token = jwt.sign(
+                { id: user.id_ambiente, username: user.usuario },
+                process.env.JWT_SECRET,
+                { expiresIn: '1h' }
+            );
+            return res.json({ Token: token, Id: user.id_ambiente, Nome:user.Nome });
+
+        } catch (error) {
+            console.error("Erro no login:", error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+}
+
+module.exports = AuthController;
