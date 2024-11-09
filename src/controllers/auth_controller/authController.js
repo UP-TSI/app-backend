@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const AuthRepository = require('../../repositories/authRepository.js');
 
@@ -10,6 +9,7 @@ class AuthController {
     async login(req, res) {
         try {
             const { username, password } = req.body;
+            console.log(`username:${username} password:${password}`);
 
             if (!username || !password) {
                 return res.status(400).json({ message: 'Username and password are required' });
