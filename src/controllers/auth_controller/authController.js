@@ -17,7 +17,7 @@ class AuthController {
             const user = await this.repository.findUserByName(username);
             
             // console.log(user)
-            console.log(`Usuário: ${user.usuario}, Senha: ${user.senha} == ${password}`);
+            // console.log(`Usuário: ${user.usuario}, Senha: ${user.senha} == ${password}`);
             
             if (!user || !(user.senha == password)) {
                 return res.status(401).json({ message: 'Invalid credentials' });
