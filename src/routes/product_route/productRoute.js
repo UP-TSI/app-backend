@@ -6,8 +6,7 @@ const ProductController = require("../../controllers/product_controller/productC
 const productController = new ProductController();
 
 router.get("/", (req, res) => productController.filtragemProdutos(req, res));
-router.get("/getByCod", (req, res) =>
-  productController.buscarProdutoPorCodigo(req, res)
-);
+router.get("/getByCod", (req, res) => productController.buscarProdutoPorCodigo(req, res));
+router.get("/statistics", (req, res) => productController.getStatistics(req, res));
 
 module.exports = router;
