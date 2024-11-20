@@ -1,12 +1,35 @@
-const Config = require("../config/config.js");
+// Models
+const ProductModel = require("../../models/product/ProductModel.js");
 
 class ProductRepository {
-  async getProductByCod(codigo) {
-    const sql = "SELECT * FROM tb_Produtos WHERE Codigo_Barras =?";
-    return await Config.sql(sql, [codigo]);
+  async getProductByCode(codigo = "") {
+    // Validação do código de barras
+    if (!codigo || typeof codigo !== "string" || codigo.trim() === "") {
+      throw new Error("Código de barras inválido ou não fornecido.");
+    }
+
+    // Chama a model para buscar o produto
+    try {
+      const product = await ProductModel.getProductByCode(codigo);
+
+      // Verifica se o produto foi encontrado
+      if (!product || product.length === 0) {
+        throw new Error(
+          `Produto com o código de barras "${codigo}" não encontrado.`
+        );
+      }
+
+      return product;
+    } catch (error) {
+      console.error(
+        `Erro ao buscar produto pelo código de barras "${codigo}":`,
+        error
+      );
+      throw error;
+    }
   }
 
-  async getAllProductsFiltered(params) {
+  async getProductsFiltered(params) {
     const {
       equalTo,
       nameIncludes,
@@ -76,27 +99,16 @@ class ProductRepository {
       ? `WHERE ${whereClauses.join(" AND ")}`
       : "";
 
-    // Exemplo de consulta SQL montada
-    const sql = `
-                SELECT 
-                    Codigo_Barras AS cod_barras,
-                    Produto AS nome,
-                    FORMAT(Preco_Compra, 2) AS v_compra,
-                    FORMAT(Preco_Venda, 2) AS v_venda,
-                    FORMAT((Preco_Venda - Preco_Compra), 2) AS lucro,
-                    Estoque AS estoque
-                FROM 
-                    tb_Produtos
-                ${whereClause}  
-                LIMIT ${perPage} 
-                OFFSET ${offset}`;
-
     // Executa a query com os valores da consulta preparada
-    const mainData = await Config.sql(sql, values);
+    const mainData = await ProductModel.getProductsFiltered(
+      whereClause,
+      values,
+      perPage,
+      offset
+    );
 
     // Dados do Pagination
-    const sqlCount = `SELECT COUNT (*) as total FROM tb_Produtos ${whereClause}`;
-    const [countResult] = await Config.sql(sqlCount, values);
+    const [countResult] = await ProductModel.getPagination(whereClause, values);
 
     const totalItems = countResult.total;
     const totalPages = Math.ceil(totalItems / perPage);
@@ -113,33 +125,11 @@ class ProductRepository {
 
   // Função para executar a query
   async getStatistics(graphType = "", params = "") {
-    const query = this.getQuery(graphType, params);
-    if (!query) {
+    const result = await ProductModel.getStatistics(graphType, params);
+    if (!result) {
       throw new Error(`Erro a retornar dados para o grafico: ${graphType}`);
     }
-    return await Config.sql(query);
-  }
-
-  getQuery(graphType="", params="") {
-    var query;
-    switch (graphType) {
-      case "potencialProfit":
-        query = `
-              SELECT Codigo as id, Produto as nome, ((Preco_Venda - Preco_Compra) * Estoque) as lucroPotencial 
-              FROM   tb_Produtos 
-              ORDER BY lucroPotencial DESC LIMIT 5 `;
-        break;
-      case "allocatedValue":
-        query = `
-              SELECT  Codigo as id, Produto as nome, ((Preco_Compra) * Estoque) as valorAlocado 
-              FROM   tb_Produtos 
-              ORDER BY valorAlocado DESC LIMIT 5 `;
-        break
-      default:
-        break;
-    }
-    return query;
-
+    return result;
   }
 }
 

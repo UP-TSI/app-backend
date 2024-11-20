@@ -1,11 +1,11 @@
-const ProductRepository = require("../../repositories/productRepository.js");
+const ProductRepository = require("../../repositories/product/productRepository.js");
 
 class productController {
   constructor() {
     this.repository = new ProductRepository();
   }
 
-  async filtragemProdutos(req, res) {
+  async getProductsFiltered(req, res) {
     try {
       const {
         equalTo = "",
@@ -39,7 +39,7 @@ class productController {
       };
 
       // Chama a função de repositório passando o objeto params
-      const result = await this.repository.getAllProductsFiltered(params);
+      const result = await this.repository.getProductsFiltered(params);
 
       // Retorna os resultados encontrados
       res.status(200).json(result);
@@ -49,12 +49,12 @@ class productController {
     }
   }
 
-  async buscarProdutoPorCodigo(req, res) {
+  async getProductByCode(req, res) {
     try {
       const { codigo } = req.query;
 
       // Chama a função de repositório passando o código do produto
-      const result = await this.repository.getProductByCod(codigo);
+      const result = await this.repository.getProductByCode(codigo);
 
       // Retorna os resultados encontrados
       res.status(200).json(result);
@@ -76,9 +76,7 @@ class productController {
       res.status(200).json(result);
     } catch (error) {
       console.error("Erro ao filtrar produtos: ", error);
-      res
-        .status(500)
-        .json({ message: `Erro ao buscar lucros potenciais.` });
+      res.status(500).json({ message: `Erro ao buscar lucros potenciais.` });
     }
   }
 }

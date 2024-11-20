@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // Controller imports
-const exampleController = require("../../controllers/example_controller/exampleController.js");
+const exampleController = require("../../controllers/example/exampleController.js");
 
 // Routes
 router.get("/", exampleController.example);
