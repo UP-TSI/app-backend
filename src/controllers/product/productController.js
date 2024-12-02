@@ -20,6 +20,7 @@ class productController {
         quantityMax = "",
         currentPage = 1,
         perPage = 10,
+        cod_barras = "",
       } = req.query;
 
       // Cria o objeto com os parâmetros a serem filtrados
@@ -36,6 +37,7 @@ class productController {
         quantityMax,
         currentPage,
         perPage,
+        cod_barras,
       };
 
       // Chama a função de repositório passando o objeto params

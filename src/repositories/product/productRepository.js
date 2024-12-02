@@ -43,6 +43,7 @@ class ProductRepository {
       quantityMax,
       currentPage = 1,
       perPage = 10,
+      cod_barras,
     } = params;
 
     // Calculando offset
@@ -92,6 +93,10 @@ class ProductRepository {
     if (quantityMax) {
       whereClauses.push(`Estoque <= ?`);
       values.push(quantityMax);
+    }
+    if (cod_barras) {
+      whereClauses.push(`Codigo_Barras LIKE ?`);
+      values.push(`%${cod_barras}%`);
     }
 
     // Concatena as cláusulas `WHERE`
